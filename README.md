@@ -37,3 +37,10 @@ Si pas néttoyé pendant 1 tour perd 3 point de bonheur
 
 1/3 de tomber malade soigner pour enlever l'afflictions
 Si le tamagotchi est vieux il mourra s'il n'est pas soigné 
+
+
+### TexteBox
+
+### Evoluer 
+
+### TempsJouer
