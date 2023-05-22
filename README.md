@@ -3,11 +3,17 @@
 Classe Tamagochi 
 
 Bonheur (0,50) de base 15 INT
+
 Nom STR 
+
 Faim BOOL 
+
 Propreté BOOL
+
 Malade BOOL
+
 Evolution (Bébé, adulte, vieillard) ---> 40 pour atteindre l'évolution d'après // Quand vieux 5 unités de temps pour dead INT 
+
 TimePlayed INT 
 
 
