@@ -93,3 +93,24 @@ public class Tamagotchi {
     }
 }
 
+public void tombeMalade() {
+    if (!malade()) {
+        if (chanceDeTomberMalade()) {
+            Bonheur -= 10;
+            System.out.println(name + " est tombé malade !");
+        } else {
+            System.out.println(name + " n'est pas tombé malade cette fois-ci.");
+        }
+    } else {
+        System.out.println(name + " est déjà malade.");
+    }
+}
+
+public boolean chanceDeTomberMalade() {
+    int chance = (int) (Math.random() * 3) + 1;
+    return chance == 1;
+}
+
+public boolean malade() {
+    return Bonheur < 50;
+}
