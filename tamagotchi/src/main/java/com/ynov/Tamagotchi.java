@@ -91,5 +91,15 @@ public class Tamagotchi {
             System.out.println("Vous avez déjà nourri");
         }
     }
+
+    public Jouer () {
+        if (this.TimePlayed < 3) {
+            this.TimePlayed += 1;
+            this.Bonheur += 3;
+            System.out.println("Vous venez de jouer avec votre tamagotchi");
+        }else if (this.TimePlayed == 3) {
+            System.out.println("Vous avez déjà joué 3 fois");
+        }
+    }
 }
 
