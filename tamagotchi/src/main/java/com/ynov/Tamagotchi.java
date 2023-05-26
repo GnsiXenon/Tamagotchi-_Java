@@ -33,6 +33,10 @@ public class Tamagotchi {
     /**
      * @arg TimePlayed : nombre de fois joué sur une unité de temps (0 à 3)
      */
+    /**
+     * @arg Evolution : 0 = Oeuf, 1 = enfant, 2 = adulte, 3 = vieux
+     */
+    Integer Evolution = 0;
     Integer TimePlayed = 0;
     /**
      * @arg Time : Temps de jeu en Secondes
