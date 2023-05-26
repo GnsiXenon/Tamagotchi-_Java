@@ -91,18 +91,18 @@ public class Tamagotchi {
             System.out.println("Vous avez déjà nourri");
         }
     }
-}
+
 
 public void tombeMalade() {
     if (!malade()) {
         if (chanceDeTomberMalade()) {
             Bonheur -= 10;
-            System.out.println(name + " est tombé malade !");
+            System.out.println(Nom + " est tombé malade !");
         } else {
-            System.out.println(name + " n'est pas tombé malade cette fois-ci.");
+            System.out.println(Nom + " n'est pas tombé malade cette fois-ci.");
         }
     } else {
-        System.out.println(name + " est déjà malade.");
+        System.out.println(Nom + " est déjà malade.");
     }
 }
 
@@ -113,4 +113,5 @@ public boolean chanceDeTomberMalade() {
 
 public boolean malade() {
     return Bonheur < 50;
+}
 }
