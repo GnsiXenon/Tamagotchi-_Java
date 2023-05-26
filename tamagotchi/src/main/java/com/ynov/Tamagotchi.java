@@ -72,6 +72,29 @@ public class Tamagotchi {
                     Faim = false;
                     JoursSansManger = 0;
                 }
+                if (Evolution == 3 && Malade == true) {
+                    System.out.println(Nom + " est mort de vieillesse");
+                    System.exit(0);
+                }
+                if (Bonheur <= 0) {
+                    System.out.println(Nom + " est mort de tristesse");
+                    System.exit(0);
+                }
+                
+                switch (Bonheur >= 50) {
+                    case Evolution == 0:
+                        Evolution = 1;
+                        System.out.println(Nom + " est devenu un enfant");
+                        break;
+                    case Evolution == 1:
+                        Evolution = 2;
+                        System.out.println(Nom + " est devenu un adulte");
+                        break;
+                    case Evolution == 2:
+                        Evolution = 3;
+                        System.out.println(Nom + " est devenu vieux");
+                        break;
+                }
 
                 Faim = false;
                 Propreté = false;
