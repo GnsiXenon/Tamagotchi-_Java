@@ -92,6 +92,7 @@ public class Tamagotchi {
         }
     }
 
+<<<<<<< HEAD
 
 public void tombeMalade() {
     if (!malade()) {
@@ -103,6 +104,16 @@ public void tombeMalade() {
         }
     } else {
         System.out.println(Nom + " est déjà malade.");
+=======
+    public Jouer () {
+        if (this.TimePlayed < 3) {
+            this.TimePlayed += 1;
+            this.Bonheur += 3;
+            System.out.println("Vous venez de jouer avec votre tamagotchi");
+        }else if (this.TimePlayed == 3) {
+            System.out.println("Vous avez déjà joué 3 fois");
+        }
+>>>>>>> a33d730aa7ab2dbb9d1638e49be360eb1f6706ca
     }
 }
 
