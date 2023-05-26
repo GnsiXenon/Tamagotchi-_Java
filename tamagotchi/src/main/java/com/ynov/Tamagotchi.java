@@ -22,13 +22,13 @@ public class Tamagotchi {
         /**
      * @arg Propreté : Diminue de 3 le bonheur si le tamagotchi est sale
      */
-    Boolean Propreté = true;
+    Boolean Propreté = false;
     /**
      * @arg Malade : 1/3 de chance d'être malade quand il est vieux
      */
     Boolean Malade = false;
     /**
-     * @arg TimePlayed : nombre de fois jouer sur une unité de temps (0 à 3)
+     * @arg TimePlayed : nombre de fois joué sur une unité de temps (0 à 3)
      */
     Integer TimePlayed = 0;
     /**
@@ -38,5 +38,23 @@ public class Tamagotchi {
     
 
 
+    public Nettoyer() {
+        if (this.Propreté == false) {
+            this.Propreté = true;
+            System.out.println("Vous venez de nettoyer votre tamagotchi");
+        }else if (this.Propreté == true) {
+            System.out.println("Vous avez déjà nettoyé");
+        }
+    }
+
+    public Nourrir() {
+        Integer nombreDeJourSansManger = 0;
+        if (this.Faim == false) {
+            this.Faim = true;
+            System.out.println("Vous venez de nourrir votre tamagotchi");
+        }else if (this.Faim == true) {
+            System.out.println("Vous avez déjà nourri");
+        }
+    }
 }
 
