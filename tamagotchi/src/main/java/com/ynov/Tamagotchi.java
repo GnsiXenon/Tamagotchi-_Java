@@ -1,5 +1,8 @@
 package com.ynov;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 
 public class Tamagotchi {
@@ -19,7 +22,7 @@ public class Tamagotchi {
      * @arg JoursSansManger : Nombre de jours sans manger
      */
     Integer JoursSansManger = 0;
-        /**
+    /**
      * @arg Propreté : Diminue de 3 le bonheur si le tamagotchi est sale
      */
     Boolean Propreté = true;
@@ -32,10 +35,42 @@ public class Tamagotchi {
      */
     Integer TimePlayed = 0;
     /**
-     * @arg Time : Temps de jeu en secondes
+     * @arg Time : Temps de jeu en Secondes
      */
-    Integer Time = 30;
+
+    final Integer TimeDay = 5;   
+    Integer Time = TimeDay;
+    Integer Jours = 0;
+
     
+
+    Tamagotchi(String Nom) {
+        this.Nom = Nom;
+    }
+
+    public void Timer(){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (Jours==0){
+                    System.out.println("Bienvenue dans le jeu du Tamagotchi !");
+                    System.out.println("Vous avez un Tamagotchi nommé " + Nom);
+                }
+                Jours++;
+                System.out.println("Jour " + Jours);
+            }
+        }, 0, TimeDay * 1000);
+    }
+    
+
+    public static void main(String[] args) {
+        Tamagotchi Tamagotchi = new Tamagotchi("Tama");
+        Tamagotchi.Timer();
+    }
+
+
+
 
 
 }
