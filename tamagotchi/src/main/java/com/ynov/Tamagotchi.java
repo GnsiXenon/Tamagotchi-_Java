@@ -57,11 +57,27 @@ public class Tamagotchi {
                     System.out.println("Bienvenue dans le jeu du Tamagotchi !");
                     System.out.println("Vous avez un Tamagotchi nommé " + Nom);
                 }
+                if (Faim == false) {
+                    JoursSansManger += 1;
+                    Bonheur -= JoursSansManger*5;
+                }
+                if (Propreté == false) {
+                    Bonheur -= 3;
+                }
+                if (Faim == true) {
+                    Faim = false;
+                    JoursSansManger = 0;
+                }
+
+                Faim = false;
+                Propreté = false;
+                TimePlayed = 0;
                 Jours++;
                 System.out.println("Jour " + Jours);
             }
         }, 0, TimeDay * 1000);
     }
+    
     
 
     public static void main(String[] args) {
@@ -92,19 +108,6 @@ public class Tamagotchi {
         }
     }
 
-<<<<<<< HEAD
-
-public void tombeMalade() {
-    if (!malade()) {
-        if (chanceDeTomberMalade()) {
-            Bonheur -= 10;
-            System.out.println(Nom + " est tombé malade !");
-        } else {
-            System.out.println(Nom + " n'est pas tombé malade cette fois-ci.");
-        }
-    } else {
-        System.out.println(Nom + " est déjà malade.");
-=======
     public Jouer () {
         if (this.TimePlayed < 3) {
             this.TimePlayed += 1;
@@ -113,16 +116,6 @@ public void tombeMalade() {
         }else if (this.TimePlayed == 3) {
             System.out.println("Vous avez déjà joué 3 fois");
         }
->>>>>>> a33d730aa7ab2dbb9d1638e49be360eb1f6706ca
     }
 }
 
-public boolean chanceDeTomberMalade() {
-    int chance = (int) (Math.random() * 3) + 1;
-    return chance == 1;
-}
-
-public boolean malade() {
-    return Bonheur < 50;
-}
-}
