@@ -80,7 +80,6 @@ public class Tamagotchi {
                     System.out.println(Nom + " est mort de tristesse");
                     System.exit(0);
                 }
-                
                 switch (Bonheur >= 50) {
                     case Evolution == 0:
                         Evolution = 1;
@@ -145,27 +144,23 @@ public class Tamagotchi {
         }
     }
 
-    public void tombeMalade() {
-        if (!malade()) {
-            if (chanceDeTomberMalade()) {
-                Bonheur -= 10;
-                System.out.println(Nom + " est tombé malade !");
-            } else {
-                System.out.println(Nom + " n'est pas tombé malade cette fois-ci.");
-            }
-        } else {
-            System.out.println(Nom + " est déjà malade.");
+    public void soigner () {
+        if (this.Malade == true) {
+            this.Malade = false;
+            System.out.println("Vous venez de soigner votre tamagotchi");
+        }else if (this.Malade == false) {
+            System.out.println("Votre tamagotchi n'est pas malade");
         }
     }
-    
-    public boolean chanceDeTomberMalade() {
-        int chance = (int) (Math.random() * 3) + 1;
-        return chance == 1;
+
+    public void tomberMalade(){
+        if (this.Evolution == 3) {
+            Integer chance = (int) (Math.random() * 3);
+            if (chance == 1) {
+                this.Malade = true;
+                System.out.println("Votre tamagotchi est malade");
+            }
+        }   
     }
-    
-    public boolean malade() {
-        return Bonheur < 50;
-    }
-    
 }
 
