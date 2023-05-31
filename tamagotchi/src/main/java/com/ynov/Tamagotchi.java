@@ -104,8 +104,11 @@ public class Tamagotchi {
                 Jours++;
                 System.out.println("Jour " + Jours);
             }
+        }
         }, 0, TimeDay * 1000);
     }
+
+
     
     
 
@@ -153,6 +156,15 @@ public class Tamagotchi {
             }
         } else {
             System.out.println(Nom + " est déjà malade.");
+        }
+    }
+
+    public void Soigner () {
+        if (this.Malade == true) {
+            this.Malade = false;
+            System.out.println("Vous venez de soigner votre tamagotchi");
+        }else if (this.Malade == false) {
+            System.out.println("Votre tamagotchi n'est pas malade");
         }
     }
     

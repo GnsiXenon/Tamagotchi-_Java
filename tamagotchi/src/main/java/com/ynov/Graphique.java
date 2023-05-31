@@ -66,7 +66,7 @@ public class Graphique extends Application {
             Button Soigner = new Button();
             Soigner.setText("Soigner");
             Soigner.setOnAction(e -> {
-                t.soigner();
+                t.Soigner();
             });
             Button Nettoyer = new Button();
             Nettoyer.setText("Nettoyer");
