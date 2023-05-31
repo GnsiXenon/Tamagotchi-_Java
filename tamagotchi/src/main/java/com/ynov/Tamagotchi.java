@@ -80,19 +80,22 @@ public class Tamagotchi {
                     System.out.println(Nom + " est mort de tristesse");
                     System.exit(0);
                 }
-                switch (Bonheur >= 50) {
-                    case Evolution == 0:
-                        Evolution = 1;
-                        System.out.println(Nom + " est devenu un enfant");
-                        break;
-                    case Evolution == 1:
-                        Evolution = 2;
-                        System.out.println(Nom + " est devenu un adulte");
-                        break;
-                    case Evolution == 2:
-                        Evolution = 3;
-                        System.out.println(Nom + " est devenu vieux");
-                        break;
+                if (Bonheur >= 50) {
+                    switch (Evolution) {
+                        case 0:
+                            Evolution = 1;
+                            System.out.println(Nom + " est devenu un enfant");
+                            break;
+                        case 1:
+                            Evolution = 2;
+                            System.out.println(Nom + " est devenu un adulte");
+                            break;
+                        case 2:
+                            Evolution = 3;
+                            System.out.println(Nom + " est devenu vieux");
+                            break;
+                        default:
+                            break;
                 }
 
                 Faim = false;
@@ -110,10 +113,6 @@ public class Tamagotchi {
         Tamagotchi Tamagotchi = new Tamagotchi("Tama");
         Tamagotchi.Timer();
     }
-
-
-
-
 
     public Nettoyer() {
         if (this.Propreté == false) {
@@ -163,4 +162,4 @@ public class Tamagotchi {
         }   
     }
 }
-
+    
