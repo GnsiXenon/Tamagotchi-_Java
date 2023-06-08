@@ -29,7 +29,7 @@ public class Graphique extends Application {
         Button btnConsole = new Button();
         btnConsole.setText("Console");
         btnConsole.setOnAction(e -> {
-            t.Timer();
+            Tamagotchi.main();
             stage.close();
         });
 
