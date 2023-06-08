@@ -1,17 +1,14 @@
 package com.ynov;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Scanner;
-import java.util.Timer;
+
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javafx.scene.control.Menu;
 
 
 
@@ -50,19 +47,20 @@ public class Tamagotchi extends TimerTask {
     /**
      * @arg Evolution : 0 = Oeuf, 1 = enfant, 2 = adulte, 3 = vieux
      */
-    String Evolution = "Oeuf";
+    String Evolution = "vieux";
     Integer TimePlayed = 0;
     /**
      * @arg Time : Temps de jeu en Secondes
      */
-    final Integer TimeDay = 2;   
+    final Integer TimeDay = 10;   
     Integer Time = TimeDay;
     Integer Jours = 0;
     /**
      * 
      * @arg DayBecomeAdult : Jour où le tamagotchi devient adulte
      */
-    Integer DayBecomeAdult = 0;
+    Integer DayBeforeAdult = 40;
+    Integer DayBeforeOld = 5;
 
     
 
@@ -70,17 +68,34 @@ public class Tamagotchi extends TimerTask {
         this.Nom = Nom;
     }
 
+    public static String Name(){
+        System.out.println("Rentrer le nom de votre Tamagotchi :");
+        InputStreamReader reader = new InputStreamReader(System.in);
+        BufferedReader buffer = new BufferedReader(reader);
+        try {
+            return buffer.readLine();
+        }
+        catch(IOException e){
+            System.out.println("Quelque chose s'est mal passé, recommencez.");
+            return Name();
+        }
+    }
+
     public void Timer(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+                Jours++;
                 System.out.println("Jour " + Jours);
                 switch (Jours){
-                    case 0:
-                        System.out.println("Bienvenue dans le jeu du Tamagotchi !");
+                    case 1:
                         System.out.println("Vous avez un Tamagotchi nommé " + Nom);
                         break;
-                    case 1:
-                        System.out.println("Votre Tamagotchi est né !");
-                        Evolution = "enfant";
-                        break;
+                    case 2:
+                        if (Evolution == "oeuf") {
+                            System.out.println("Votre Tamagotchi est né !");
+                            Evolution = "enfant";
+                            break;
+                        }
                     default:
                        if (Evolution == "vieux") {
                             if (Malade == true) {
@@ -107,6 +122,7 @@ public class Tamagotchi extends TimerTask {
                         }
                         if (Bonheur>=40 && Evolution == "enfant" && SuccessiveFeedDays>=4){
                             Evolution = "adulte";
+                            DayBeforeAdult--;
                             System.out.println(Nom + " est devenu adulte !");
                         }
                         break;
@@ -115,7 +131,24 @@ public class Tamagotchi extends TimerTask {
                 Faim = false;
                 Propreté = false;
                 TimePlayed = 0;
-                Jours++;
+                if (DayBeforeAdult <40 ) {
+                    DayBeforeAdult--;
+                    if (DayBeforeAdult == 0) {
+                        Evolution = "vieux";
+                        System.out.println(Nom + " est devenu vieux !");
+                    }
+                }
+
+                if (DayBeforeOld <5 ) {
+                    DayBeforeOld--;
+                    if (DayBeforeOld == 0) {
+                        Evolution = "mort";
+                        System.out.println(Nom + " est mort de vieillesse !");
+                        System.exit(0);
+                    }
+                }
+
+                System.out.println("Appuyez sur Entrée pour continuer...");
                        
         }
 
@@ -124,7 +157,9 @@ public class Tamagotchi extends TimerTask {
     
 
     public static void main() {
-        Tamagotchi tamagotchi = new Tamagotchi("Tama");
+        System.out.println("Bienvenue dans le jeu du Tamagotchi !");       
+        String futurName = Tamagotchi.Name(); 
+        Tamagotchi tamagotchi = new Tamagotchi(futurName);
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
         Runnable timerTamagotchi = () -> {
@@ -136,7 +171,8 @@ public class Tamagotchi extends TimerTask {
         };
 
         executor.scheduleAtFixedRate(timerTamagotchi, 0, tamagotchi.TimeDay, TimeUnit.SECONDS);
-        executor.schedule(menuTamagotchi,tamagotchi.TimeDay, TimeUnit.SECONDS);
+        executor.schedule(menuTamagotchi,(tamagotchi.Evolution =="oeuf" ? tamagotchi.TimeDay : 0), TimeUnit.SECONDS);
+        System.out.println((tamagotchi.Evolution =="oeuf" ? tamagotchi.TimeDay : 0));
 
 
     }
@@ -149,14 +185,14 @@ public class Tamagotchi extends TimerTask {
   
     public void ShowStat(){
         System.out.print("Nom : " + Nom);
-        System.out.print(" | Bonheur : " + Bonheur);
+        System.out.println(" | Bonheur : " + Bonheur);
         System.out.print((Faim == true ? " | J'ai bien mangé" : " | J'ai faim"));
-        System.out.print((JoursSansManger == 0) ? "Je mange bien depuis des jours" : "Ça fait " + JoursSansManger + " jours que je n'ai pas mangé");
+        System.out.println((JoursSansManger == 0) ? " | Je mange bien depuis des jours" : " | Ça fait " + JoursSansManger + " jours que je n'ai pas mangé");
         System.out.print((Propreté == true ? " | Je suis propre" : " | Je suis sale"));
-        System.out.print((Malade == true ? " | Je suis malade" : " | Je suis en bonne santé"));
-        System.out.print(" | On a joué" + TimePlayed + " fois aujourd'hui");
-        System.out.print(" | Je suis un " + Evolution);
-        System.out.print(" | Jours : " + Jours);
+        System.out.println((Malade == true ? " | Je suis malade" : " | Je suis en bonne santé"));
+        System.out.println(" | On a joué " + TimePlayed + " fois aujourd'hui");
+        System.out.println(" | Je suis un " + Evolution);
+        System.out.println(" | Jours : " + Jours);
         System.out.println("");
     }
 
@@ -177,7 +213,6 @@ public class Tamagotchi extends TimerTask {
             Integer choice = Integer.parseInt(line);
             choice(choice);
         } catch (Exception e) {
-            System.out.println("Erreur de saisie");
             Menu();
         }
 
@@ -188,6 +223,8 @@ public class Tamagotchi extends TimerTask {
 
 
     public void choice(Integer choice) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         switch (choice) {
             case 1:
                 Nettoyer();
@@ -278,5 +315,5 @@ public class Tamagotchi extends TimerTask {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'run'");
     }
-    
+
 }

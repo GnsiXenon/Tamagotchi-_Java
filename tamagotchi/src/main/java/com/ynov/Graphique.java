@@ -1,7 +1,7 @@
 package com.ynov;
 
 
-import java.util.Scanner;
+
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -9,15 +9,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
+
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 
 public class Graphique extends Application {
 
-    Tamagotchi t = new Tamagotchi("toto");
+    Tamagotchi t = new Tamagotchi("a");
 
 
         @Override
@@ -29,8 +28,8 @@ public class Graphique extends Application {
         Button btnConsole = new Button();
         btnConsole.setText("Console");
         btnConsole.setOnAction(e -> {
-            Tamagotchi.main();
             stage.close();
+            Tamagotchi.main();
         });
 
         Button btnGraphique = new Button();
