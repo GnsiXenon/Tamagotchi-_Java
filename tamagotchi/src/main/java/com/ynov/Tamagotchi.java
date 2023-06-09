@@ -45,9 +45,9 @@ public class Tamagotchi extends TimerTask {
      * @arg TimePlayed : nombre de fois joué sur une unité de temps (0 à 3)
      */
     /**
-     * @arg Evolution : 0 = Oeuf, 1 = enfant, 2 = adulte, 3 = vieux
+     * @arg Evolution : 0 = oeuf, 1 = enfant, 2 = adulte, 3 = vieux
      */
-    String Evolution = "vieux";
+    String Evolution = "oeuf";
     Integer TimePlayed = 0;
     /**
      * @arg Time : Temps de jeu en Secondes
@@ -309,6 +309,16 @@ public class Tamagotchi extends TimerTask {
     public boolean malade() {
         return Bonheur < 50;
     }
+
+
+    // Methode en plus pour la version graphique
+    
+
+    public void resetDay(){
+        Propreté = false;
+        Faim = false;
+    }
+
 
     @Override
     public void run() {
