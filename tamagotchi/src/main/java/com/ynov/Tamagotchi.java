@@ -1,13 +1,21 @@
 package com.ynov;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Scanner;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javafx.collections.ListChangeListener.Change;
 
 
 
@@ -68,16 +76,14 @@ public class Tamagotchi extends TimerTask {
         this.Nom = Nom;
     }
 
-    public static String Name(){
-        System.out.println("Rentrer le nom de votre Tamagotchi :");
-        InputStreamReader reader = new InputStreamReader(System.in);
-        BufferedReader buffer = new BufferedReader(reader);
-        try {
-            return buffer.readLine();
-        }
-        catch(IOException e){
-            System.out.println("Quelque chose s'est mal passé, recommencez.");
-            return Name();
+
+    public void Name(){
+        System.out.println("Quel est le nom de votre Tamagotchi ?");
+        try (Scanner sc = new Scanner(System.in)) {
+            Nom = sc.nextLine();
+        } catch (Exception e) {
+            System.out.println("Erreur : " + e);
+            Name();
         }
     }
 
@@ -158,8 +164,8 @@ public class Tamagotchi extends TimerTask {
 
     public static void main() {
         System.out.println("Bienvenue dans le jeu du Tamagotchi !");       
-        String futurName = Tamagotchi.Name(); 
-        Tamagotchi tamagotchi = new Tamagotchi(futurName);
+        Tamagotchi tamagotchi = new Tamagotchi("");
+        tamagotchi.load();
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
         Runnable timerTamagotchi = () -> {
@@ -206,6 +212,7 @@ public class Tamagotchi extends TimerTask {
         System.out.println("2 - Nourrir");
         System.out.println("3 - Jouer");
         System.out.println("4 - Soigner");
+        System.out.println("5 - Save");
         InputStreamReader reader = new InputStreamReader(System.in);
         BufferedReader buffer = new BufferedReader(reader);
         try {
@@ -242,12 +249,17 @@ public class Tamagotchi extends TimerTask {
                 Soigner();
                 Menu();
                 break;
+            case 5:
+                Save();
+                System.exit(0);
+                break;
             default:
                 System.out.println("Erreur de saisie");
                 Menu();
                 break;
         }
     }
+
 
     public void Nettoyer() {
         if (this.Propreté == false) {
@@ -314,10 +326,86 @@ public class Tamagotchi extends TimerTask {
     // Methode en plus pour la version graphique
     
 
-    public void resetDay(){
-        Propreté = false;
-        Faim = false;
+    public void Save(){
+        String save = "";
+        save += Nom + "\n";
+        save += Bonheur + "\n";
+        save += Faim + "\n";
+        save += JoursSansManger + "\n";
+        save += Propreté + "\n";
+        save += Malade + "\n";
+        save += TimePlayed + "\n";
+        save += Evolution + "\n";
+        save += Jours + "\n";
+        save += SuccessiveFeedDays + "\n";
+
+        try {
+            FileWriter myWriter = new FileWriter("save.csv");
+            myWriter.write(save);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+          } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
     }
+
+    public void load(){
+        if (new File("save.csv").exists()) {
+            try {
+                File myObj = new File("save.csv");
+                Scanner myReader = new Scanner(myObj);
+                int i = 0;
+                while (myReader.hasNextLine()) {
+                  String data = myReader.nextLine();
+                  switch (i) {
+                    case 0:
+                        Nom = data;
+                        break;
+                    case 1:
+                        Bonheur = Integer.parseInt(data);
+                        break;
+                    case 2:
+                        Faim = Boolean.parseBoolean(data);
+                        break;
+                    case 3:
+                        JoursSansManger = Integer.parseInt(data);
+                        break;
+                    case 4:
+                        Propreté = Boolean.parseBoolean(data);
+                        break;
+                    case 5:
+                        Malade = Boolean.parseBoolean(data);
+                        break;
+                    case 6:
+                        TimePlayed = Integer.parseInt(data);
+                        break;
+                    case 7:
+                        Evolution = data;
+                        break;
+                    case 8:
+                        Jours = Integer.parseInt(data);
+                        break;
+                    case 9:
+                        SuccessiveFeedDays = Integer.parseInt(data);
+                        break;
+                    default:
+                        break;
+                  }
+                  i++;
+                }
+                myReader.close();
+              } catch (FileNotFoundException e) {
+                System.out.println("Le fichier n'a pas été chargé" + e.getMessage());
+                e.printStackTrace();
+              }
+    }else
+    {
+        System.out.println("Aucune sauvegarde n'a été trouvée");
+        Name();
+    }
+    }
+
 
 
     @Override

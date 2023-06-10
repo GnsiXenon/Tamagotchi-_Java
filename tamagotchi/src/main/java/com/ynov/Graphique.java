@@ -8,17 +8,17 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class Graphique extends Application {
 
     Tamagotchi t = new Tamagotchi("a");
-
-   
 
 
         @Override
@@ -38,7 +38,15 @@ public class Graphique extends Application {
         btnGraphique.setText("Graphique");
         btnGraphique.setOnAction(e -> {
             stage.close();
-            action(primaryStage);
+            t.load();
+            if (t.Nom == "a"){
+                askName(primaryStage);
+
+            }
+            else{
+                action(primaryStage);
+
+            }
         });
         HBox buttons = new HBox(30, btnConsole, btnGraphique);
         buttons.setAlignment(Pos.CENTER);
@@ -50,8 +58,34 @@ public class Graphique extends Application {
         stage.show();
         }
 
+        private void askName(Stage primaryStage){
+
+            Stage stage = new Stage();
+
+            Label label = new Label("Quel est le nom de votre Tamagotchi ?");
+            TextField name = new TextField();
+
+            name.setMaxWidth(200);
+            Button btn = new Button();
+            btn.setText("Valider");
+            btn.setOnAction(e -> {
+                t.Nom = name.getText();
+                stage.close();
+                action(primaryStage);
+            });
+            HBox buttons = new HBox(30, btn);
+            buttons.setAlignment(Pos.CENTER);
+            VBox vBox = new VBox(label,name,buttons);
+            Scene confirmScene = new Scene(vBox, 300, 250);
+            stage.setScene(confirmScene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(primaryStage);
+            stage.show();
+
+        }
 
         private void action(Stage primaryStage) {
+            t.Timer();
              Label Bonheur = new Label("Bonheur : " + t.Bonheur);
             Label Faim = new Label("Faim : " + t.Faim);
             Label Sante = new Label("Sante : " + t.Malade);
@@ -74,7 +108,7 @@ public class Graphique extends Application {
             Jouer.setText("Jouer");
             Jouer.setOnAction(e -> {
                 if (t.Evolution != "oeuf"){
-                     t.Jouer();
+                t.Jouer();
                     Bonheur.setText("Bonheur : " + t.Bonheur);
                 }
                
@@ -111,9 +145,16 @@ public class Graphique extends Application {
                 Jour.setText("Jour : " + t.Jours);
             });
 
+            Button saveButton = new Button();
+            saveButton.setText("Sauvegarder");
+            saveButton.setOnAction(e -> {
+                t.Save();
+                primaryStage.close();
+            });
+
             HBox infos = new HBox(30, Bonheur, Faim, Sante, Proprete, Nom, Age, Jour);
             infos.setAlignment(Pos.CENTER);
-            HBox buttons = new HBox(30, Manger, Jouer, Soigner, Nettoyer, PassseDay);
+            HBox buttons = new HBox(30, Manger, Jouer, Soigner, Nettoyer, PassseDay, saveButton);
             buttons.setAlignment(Pos.CENTER);
             VBox vBox = new VBox(buttons, infos);
             Scene confirmScene = new Scene(vBox, 300, 250);
@@ -121,7 +162,7 @@ public class Graphique extends Application {
             primaryStage.show();
         }
 
-        
+
 
         
             public void test() {
