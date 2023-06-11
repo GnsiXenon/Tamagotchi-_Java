@@ -87,9 +87,9 @@ public class Graphique extends Application {
         private void action(Stage primaryStage) { //Possede les bouttons pour effectuer les action et l'affichage des informations du tamagotchi 
             t.Timer();
              Label Bonheur = new Label("Bonheur : " + t.Bonheur);
-            Label Faim = new Label("Faim : " + t.Faim);
-            Label Sante = new Label("Sante : " + t.Malade);
-            Label Proprete = new Label("Proprete : " + t.Propreté);
+            Label Faim = new Label((t.Faim == true ? "J'ai faim" : "Je n'ai pas faim"));
+            Label Sante = new Label((t.Malade == true ? "Je suis Malade" : "Je suis en pleine forme"));
+            Label Proprete = new Label((t.Propreté == true ? "Je suis propre" : "Je suis sale"));
             Label Nom = new Label("Nom : " + t.Nom);
             Label Age = new Label("Age : " + t.Evolution);
             Label Jour = new Label("Jour : " + t.Jours);
@@ -100,7 +100,7 @@ public class Graphique extends Application {
             Manger.setOnAction(e -> {
                 if (t.Evolution != "oeuf"){
             t.Nourrir();
-            Faim.setText("Faim : " + t.Faim);
+            Faim.setText((t.Faim == true ? "J'ai faim" : "Je n'ai pas faim"));
                 }
             });
                 
@@ -118,7 +118,7 @@ public class Graphique extends Application {
             Soigner.setOnAction(e -> {
                 if (t.Evolution != "oeuf"){
                 t.Soigner();
-                Sante.setText("Sante : " + t.Malade);
+                Sante.setText((t.Malade == true ? "Je suis Malade" : "Je suis en pleine forme"));
                 Bonheur.setText("Bonheur : " + t.Bonheur);
                 }
             });
@@ -128,7 +128,7 @@ public class Graphique extends Application {
                 if (t.Evolution != "oeuf"){
                 t.Nettoyer();
                 Bonheur.setText("Bonheur : " + t.Bonheur);
-                Proprete.setText("Proprete : " + t.Propreté);
+                Proprete.setText((t.Propreté == true ? "Je suis propre" : "Je suis sale"));
                 }
             });
 
@@ -136,10 +136,10 @@ public class Graphique extends Application {
             PassseDay.setText("Passer un jour");
             PassseDay.setOnAction(e -> {
                 t.Timer();
-                Faim.setText("Faim : " + t.Faim);
-                Sante.setText("Sante : " + t.Malade);
+                Faim.setText((t.Faim == true ? "J'ai faim" : "Je n'ai pas faim"));
+                Sante.setText((t.Malade == true ? "Je suis Malade" : "Je suis en pleine forme"));
                 Bonheur.setText("Bonheur : " + t.Bonheur);
-                Proprete.setText("Proprete : " + t.Propreté);
+                Proprete.setText((t.Propreté == true ? "Je suis propre" : "Je suis sale"));
                 Nom.setText("Nom : " + t.Nom);
                 Age.setText("Age : " + t.Evolution);
                 Jour.setText("Jour : " + t.Jours);

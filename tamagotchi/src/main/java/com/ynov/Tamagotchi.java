@@ -150,6 +150,7 @@ public class Tamagotchi extends TimerTask implements Serializable {
                     DayBeforeAdult--;
                     if (DayBeforeAdult == 0) {
                         Evolution = "vieux";
+                        DayBeforeDeath--;
                         System.out.println(Nom + " est devenu vieux !");
                     }
                 }
