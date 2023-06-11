@@ -59,7 +59,7 @@ public class Tamagotchi extends TimerTask implements Serializable {
     /**
      * @arg Time : Temps de jeu en Secondes
      */
-    final Integer TimeDay = 10;   
+    final Integer TimeDay = 7;   
     Integer Time = TimeDay;
     Integer Jours = 0;
     /**
@@ -124,6 +124,7 @@ public class Tamagotchi extends TimerTask implements Serializable {
                         }
                         if (Faim == false) {    //check si il a faim et enleve tu bonheur si il a faim
                             JoursSansManger += 1;
+                            SuccessiveFeedDays = 0;
                             Bonheur -= JoursSansManger*5;
                         }
                         if (Propreté == false) {   //check si il est sale et enleve du bonheur si il est sale
@@ -202,7 +203,7 @@ public class Tamagotchi extends TimerTask implements Serializable {
         System.out.print("Nom : " + Nom);
         System.out.println(" | Bonheur : " + Bonheur);
         System.out.print((Faim == true ? " | J'ai bien mangé" : " | J'ai faim"));
-        System.out.println((JoursSansManger == 0) ? " | Je mange bien depuis des jours" : " | Ça fait " + JoursSansManger + " jours que je n'ai pas mangé");
+        System.out.println((JoursSansManger == 0) ? " | Je mange bien depuis "+SuccessiveFeedDays+"  jours" : " | Ça fait " + JoursSansManger + " jours que je n'ai pas mangé");
         System.out.print((Propreté == true ? " | Je suis propre" : " | Je suis sale"));
         System.out.println((Malade == true ? " | Je suis malade" : " | Je suis en bonne santé"));
         System.out.println(" | On a joué " + TimePlayed + " fois aujourd'hui");
@@ -368,6 +369,8 @@ public class Tamagotchi extends TimerTask implements Serializable {
                 this.Evolution = savedData.Evolution;
                 this.Jours = savedData.Jours;
                 this.SuccessiveFeedDays = savedData.SuccessiveFeedDays;
+                this.DayBeforeAdult = savedData.DayBeforeAdult;
+                this.DayBeforeDeath = savedData.DayBeforeDeath;
 
                 System.out.println("Chargement réussi.");
             } catch (IOException e) {
