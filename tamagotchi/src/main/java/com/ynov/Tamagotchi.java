@@ -2,25 +2,24 @@ package com.ynov;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Scanner;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javafx.collections.ListChangeListener.Change;
 
 
 
 
-public class Tamagotchi extends TimerTask {
+
+public class Tamagotchi extends TimerTask implements Serializable {
 
     /**
      * Bonheur allant de 0 à 50
@@ -65,10 +64,14 @@ public class Tamagotchi extends TimerTask {
     Integer Jours = 0;
     /**
      * 
-     * @arg DayBecomeAdult : Jour où le tamagotchi devient adulte
+     * @arg DayBeforeAdult : Nombre de jours avant de devenir adulte
      */
     Integer DayBeforeAdult = 40;
-    Integer DayBeforeOld = 5;
+    /**
+     * 
+     * @arg DayBeforeDeath : Nombre de jours avant de mourir
+     */
+    Integer DayBeforeDeath = 5;
 
     
 
@@ -76,34 +79,38 @@ public class Tamagotchi extends TimerTask {
         this.Nom = Nom;
     }
 
-
+// Methode Name qui permet de choisis le nom du Tamagotchi au debut du jeu
     public void Name(){
         System.out.println("Quel est le nom de votre Tamagotchi ?");
-        try (Scanner sc = new Scanner(System.in)) {
-            Nom = sc.nextLine();
-        } catch (Exception e) {
-            System.out.println("Erreur : " + e);
+        InputStreamReader reader = new InputStreamReader(System.in);
+        BufferedReader buffer = new BufferedReader(reader);
+        try {
+            Nom = buffer.readLine();
+        }
+        catch(IOException e){
+            System.out.println("Quelque chose s'est mal passé, recommencez.");
             Name();
         }
     }
-
+    
+//Methode Timer qui permet de faire passer le temps dans le jeu
     public void Timer(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
                 Jours++;
                 System.out.println("Jour " + Jours);
                 switch (Jours){
-                    case 1:
+                    case 1: //Premier jour ou le Tamagotchi n'est pas encore né
                         System.out.println("Vous avez un Tamagotchi nommé " + Nom);
                         break;
-                    case 2:
+                    case 2: //Deuxième jour ou le Tamagotchi née
                         if (Evolution == "oeuf") {
                             System.out.println("Votre Tamagotchi est né !");
                             Evolution = "enfant";
                             break;
                         }
                     default:
-                       if (Evolution == "vieux") {
+                       if (Evolution == "vieux") {  //check si il est malade et vieux 
                             if (Malade == true) {
                                 System.out.println(Nom + " est mort de maladie");
                                 System.exit(0);
@@ -111,22 +118,22 @@ public class Tamagotchi extends TimerTask {
                                 Malade = chanceDeTomberMalade();
                             }
                         }
-                        if (Bonheur <= 0) {
+                        if (Bonheur <= 0) { //check si son bonheur est a 0
                             System.out.println(Nom + " est mort de tristesse");
                             System.exit(0);
                         }
-                        if (Faim == false) {
+                        if (Faim == false) {    //check si il a faim et enleve tu bonheur si il a faim
                             JoursSansManger += 1;
                             Bonheur -= JoursSansManger*5;
                         }
-                        if (Propreté == false) {
+                        if (Propreté == false) {   //check si il est sale et enleve du bonheur si il est sale
                             Bonheur -= 3;
                         }
-                        if (Faim == true) {
+                        if (Faim == true) { //check si il a manger 
                             Faim = false;
                             JoursSansManger = 0;
                         }
-                        if (Bonheur>=40 && Evolution == "enfant" && SuccessiveFeedDays>=4){
+                        if (Bonheur>=40 && Evolution == "enfant" && SuccessiveFeedDays>=4){ //fonction pour qu'il devienne adulte
                             Evolution = "adulte";
                             DayBeforeAdult--;
                             System.out.println(Nom + " est devenu adulte !");
@@ -134,10 +141,11 @@ public class Tamagotchi extends TimerTask {
                         break;
                         
                 }
+                //Reset les variable pour le jour suivant
                 Faim = false;
                 Propreté = false;
                 TimePlayed = 0;
-                if (DayBeforeAdult <40 ) {
+                if (DayBeforeAdult <40 ) { //check si il est adulte et enleve un jour avant qu'il devienne vieux
                     DayBeforeAdult--;
                     if (DayBeforeAdult == 0) {
                         Evolution = "vieux";
@@ -145,9 +153,9 @@ public class Tamagotchi extends TimerTask {
                     }
                 }
 
-                if (DayBeforeOld <5 ) {
-                    DayBeforeOld--;
-                    if (DayBeforeOld == 0) {
+                if (DayBeforeDeath <5 ) { //check si il est vieux et enleve un jour avant qu'il meurt
+                    DayBeforeDeath--;
+                    if (DayBeforeDeath == 0) {
                         Evolution = "mort";
                         System.out.println(Nom + " est mort de vieillesse !");
                         System.exit(0);
@@ -160,12 +168,16 @@ public class Tamagotchi extends TimerTask {
 
 
     
-    
 
     public static void main() {
         System.out.println("Bienvenue dans le jeu du Tamagotchi !");       
         Tamagotchi tamagotchi = new Tamagotchi("");
-        tamagotchi.load();
+        tamagotchi.Load();
+        if (tamagotchi.Nom == "") {
+            tamagotchi.Name();
+        }
+        
+        //Double Thread pour le timer et le menu
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
         Runnable timerTamagotchi = () -> {
@@ -176,11 +188,8 @@ public class Tamagotchi extends TimerTask {
             tamagotchi.Menu();
         };
 
-        executor.scheduleAtFixedRate(timerTamagotchi, 0, tamagotchi.TimeDay, TimeUnit.SECONDS);
-        executor.schedule(menuTamagotchi,(tamagotchi.Evolution =="oeuf" ? tamagotchi.TimeDay : 0), TimeUnit.SECONDS);
-        System.out.println((tamagotchi.Evolution =="oeuf" ? tamagotchi.TimeDay : 0));
-
-
+        executor.scheduleAtFixedRate(timerTamagotchi, 0, tamagotchi.TimeDay, TimeUnit.SECONDS); //timer tout les x secondes (x = TimeDay)
+        executor.schedule(menuTamagotchi,(tamagotchi.Evolution =="oeuf" ? tamagotchi.TimeDay+1 : 0), TimeUnit.SECONDS); //menu qui se lance au bout de x secondes (x = TimeDay) si il est oeuf sinon il se lance directement
     }
     
 
@@ -189,7 +198,7 @@ public class Tamagotchi extends TimerTask {
 
 
   
-    public void ShowStat(){
+    public void ShowStat(){ //Affiche les stats du Tamagotchi
         System.out.print("Nom : " + Nom);
         System.out.println(" | Bonheur : " + Bonheur);
         System.out.print((Faim == true ? " | J'ai bien mangé" : " | J'ai faim"));
@@ -205,7 +214,7 @@ public class Tamagotchi extends TimerTask {
 
 
 
-    public void Menu(){
+    public void Menu(){ // Menu du jeu
         ShowStat();
         System.out.println("Que voulez-vous faire ?");
         System.out.println("1 - Nettoyer");
@@ -229,7 +238,7 @@ public class Tamagotchi extends TimerTask {
 
 
 
-    public void choice(Integer choice) {
+    public void choice(Integer choice) { //Methode qui check le choix du joueur
         System.out.print("\033[H\033[2J");
         System.out.flush();
         switch (choice) {
@@ -261,7 +270,7 @@ public class Tamagotchi extends TimerTask {
     }
 
 
-    public void Nettoyer() {
+    public void Nettoyer() { //Methode pour nettoyer le Tamagotchi
         if (this.Propreté == false) {
             this.Propreté = true;
             System.out.println("Vous venez de nettoyer votre tamagotchi");
@@ -270,7 +279,7 @@ public class Tamagotchi extends TimerTask {
         }
     }
 
-    public void Nourrir() {
+    public void Nourrir() { //Methode pour nourrir le Tamagotchi
          JoursSansManger = 0;
         if (this.Faim == false) {
             this.Faim = true;
@@ -281,30 +290,34 @@ public class Tamagotchi extends TimerTask {
         }
     }
 
-    public void Jouer () {
+    public void Jouer () { //Methode pour jouer avec le Tamagotchi
         if (this.TimePlayed < 3) {
             this.TimePlayed += 1;
             this.Bonheur += 3;
+            if (this.Bonheur > 50) {
+                this.Bonheur = 50;
+            }
             System.out.println("Vous venez de jouer avec votre tamagotchi");
         }else if (this.TimePlayed == 3) {
             System.out.println("Vous avez déjà joué 3 fois");
         }
     }
 
-    public void tombeMalade() {
-        if (!malade()) {
+    public void tombeMalade() { //Methode pour rendre malade le Tamagotchi
+        if (Evolution == "vieux") {
             if (chanceDeTomberMalade()) {
                 Bonheur -= 10;
+                if (this.Bonheur < 0) {
+                this.Bonheur = 0;
+            }
                 System.out.println(Nom + " est tombé malade !");
             } else {
                 System.out.println(Nom + " n'est pas tombé malade cette fois-ci.");
             }
-        } else {
-            System.out.println(Nom + " est déjà malade.");
-        }
+        } 
     }
 
-    public void Soigner () {
+    public void Soigner () { //Methode pour soigner le Tamagotchi
         if (this.Malade == true) {
             this.Malade = false;
             System.out.println("Vous venez de soigner votre tamagotchi");
@@ -313,99 +326,61 @@ public class Tamagotchi extends TimerTask {
         }
     }
     
-    public boolean chanceDeTomberMalade() {
+    public boolean chanceDeTomberMalade() { //Methode pour calculer la chance de tomber malade 1 chance sur 3
         int chance = (int) (Math.random() * 3) + 1;
         return chance == 1;
     }
-    
-    public boolean malade() {
-        return Bonheur < 50;
-    }
 
 
-    // Methode en plus pour la version graphique
-    
 
-    public void Save(){
-        String save = "";
-        save += Nom + "\n";
-        save += Bonheur + "\n";
-        save += Faim + "\n";
-        save += JoursSansManger + "\n";
-        save += Propreté + "\n";
-        save += Malade + "\n";
-        save += TimePlayed + "\n";
-        save += Evolution + "\n";
-        save += Jours + "\n";
-        save += SuccessiveFeedDays + "\n";
 
+    public void Save() { //Methode pour sauvegarder le Tamagotchi
         try {
-            FileWriter myWriter = new FileWriter("save.csv");
-            myWriter.write(save);
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-          } catch (IOException e) {
-            System.out.println("An error occurred.");
+            FileOutputStream fileOut = new FileOutputStream("save.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this);
+            out.close();
+            fileOut.close();
+            System.out.println("Sauvegarde réussie.");
+        } catch (IOException e) {
+            System.out.println("Une erreur est survenue lors de la sauvegarde.");
             e.printStackTrace();
-          }
+        }
     }
 
-    public void load(){
-        if (new File("save.csv").exists()) {
+    public void Load() { //Methode pour charger le Tamagotchi
+        if (new File("save.ser").exists()) {
             try {
-                File myObj = new File("save.csv");
-                Scanner myReader = new Scanner(myObj);
-                int i = 0;
-                while (myReader.hasNextLine()) {
-                  String data = myReader.nextLine();
-                  switch (i) {
-                    case 0:
-                        Nom = data;
-                        break;
-                    case 1:
-                        Bonheur = Integer.parseInt(data);
-                        break;
-                    case 2:
-                        Faim = Boolean.parseBoolean(data);
-                        break;
-                    case 3:
-                        JoursSansManger = Integer.parseInt(data);
-                        break;
-                    case 4:
-                        Propreté = Boolean.parseBoolean(data);
-                        break;
-                    case 5:
-                        Malade = Boolean.parseBoolean(data);
-                        break;
-                    case 6:
-                        TimePlayed = Integer.parseInt(data);
-                        break;
-                    case 7:
-                        Evolution = data;
-                        break;
-                    case 8:
-                        Jours = Integer.parseInt(data);
-                        break;
-                    case 9:
-                        SuccessiveFeedDays = Integer.parseInt(data);
-                        break;
-                    default:
-                        break;
-                  }
-                  i++;
-                }
-                myReader.close();
-              } catch (FileNotFoundException e) {
-                System.out.println("Le fichier n'a pas été chargé" + e.getMessage());
-                e.printStackTrace();
-              }
-    }else
-    {
-        System.out.println("Aucune sauvegarde n'a été trouvée");
-        Name();
-    }
-    }
+                FileInputStream fileIn = new FileInputStream("save.ser");
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                Tamagotchi savedData = (Tamagotchi) in.readObject();
+                in.close();
+                fileIn.close();
 
+                // Copier les valeurs des attributs de savedData vers l'instance courante
+                this.Nom = savedData.Nom;
+                this.Bonheur = savedData.Bonheur;
+                this.Faim = savedData.Faim;
+                this.JoursSansManger = savedData.JoursSansManger;
+                this.Propreté = savedData.Propreté;
+                this.Malade = savedData.Malade;
+                this.TimePlayed = savedData.TimePlayed;
+                this.Evolution = savedData.Evolution;
+                this.Jours = savedData.Jours;
+                this.SuccessiveFeedDays = savedData.SuccessiveFeedDays;
+
+                System.out.println("Chargement réussi.");
+            } catch (IOException e) {
+                System.out.println("Le fichier n'a pas pu être chargé : " + e.getMessage());
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                System.out.println("Le format de fichier est invalide : " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Aucune sauvegarde n'a été trouvée.");
+        }
+    }
 
 
     @Override

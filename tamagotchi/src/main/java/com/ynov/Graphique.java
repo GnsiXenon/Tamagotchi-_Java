@@ -4,6 +4,7 @@ package com.ynov;
 
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,12 +14,12 @@ import javafx.scene.layout.HBox;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 public class Graphique extends Application {
 
-    Tamagotchi t = new Tamagotchi("a");
+    Tamagotchi t = new Tamagotchi("");
 
 
         @Override
@@ -28,27 +29,26 @@ public class Graphique extends Application {
 
         Label label = new Label("Quelle mode de jeux voulez vous ?");
         Button btnConsole = new Button();
-        btnConsole.setText("Console");
+        btnConsole.setText("Console");//On crée un bouton pour le mode console
         btnConsole.setOnAction(e -> {
             stage.close();
             Tamagotchi.main();
         });
 
         Button btnGraphique = new Button();
-        btnGraphique.setText("Graphique");
+        btnGraphique.setText("Graphique"); //On crée un bouton pour le mode graphique
         btnGraphique.setOnAction(e -> {
             stage.close();
-            t.load();
-            if (t.Nom == "a"){
-                askName(primaryStage);
-
+            t.Load();
+            if (t.Nom == ""){
+                askName(primaryStage);  //si il y a pas de sauvegarde on demande le nom
             }
             else{
-                action(primaryStage);
+                action(primaryStage); //sinon on lance le jeu
 
             }
         });
-        HBox buttons = new HBox(30, btnConsole, btnGraphique);
+        HBox buttons = new HBox(30, btnConsole, btnGraphique); 
         buttons.setAlignment(Pos.CENTER);
         VBox vBox = new VBox(label, buttons);
         Scene confirmScene = new Scene(vBox, 300, 250);
@@ -69,9 +69,9 @@ public class Graphique extends Application {
             Button btn = new Button();
             btn.setText("Valider");
             btn.setOnAction(e -> {
-                t.Nom = name.getText();
+                t.Nom = name.getText();//On récupère le nom du tamagotchi
                 stage.close();
-                action(primaryStage);
+                action(primaryStage); //On lance le jeu
             });
             HBox buttons = new HBox(30, btn);
             buttons.setAlignment(Pos.CENTER);
@@ -84,7 +84,7 @@ public class Graphique extends Application {
 
         }
 
-        private void action(Stage primaryStage) {
+        private void action(Stage primaryStage) { //Possede les bouttons pour effectuer les action et l'affichage des informations du tamagotchi 
             t.Timer();
              Label Bonheur = new Label("Bonheur : " + t.Bonheur);
             Label Faim = new Label("Faim : " + t.Faim);
@@ -132,7 +132,7 @@ public class Graphique extends Application {
                 }
             });
 
-            Button PassseDay = new Button();
+            Button PassseDay = new Button(); //Le button est une alternive a la répetition de la fonction Timer tout les x temps c'est a l'utilisateur de choisir quand il veut passer un jour
             PassseDay.setText("Passer un jour");
             PassseDay.setOnAction(e -> {
                 t.Timer();
@@ -145,7 +145,7 @@ public class Graphique extends Application {
                 Jour.setText("Jour : " + t.Jours);
             });
 
-            Button saveButton = new Button();
+            Button saveButton = new Button();  //Sauvegarde les informations du tamagotchi
             saveButton.setText("Sauvegarder");
             saveButton.setOnAction(e -> {
                 t.Save();
@@ -157,7 +157,7 @@ public class Graphique extends Application {
             HBox buttons = new HBox(30, Manger, Jouer, Soigner, Nettoyer, PassseDay, saveButton);
             buttons.setAlignment(Pos.CENTER);
             VBox vBox = new VBox(buttons, infos);
-            Scene confirmScene = new Scene(vBox, 300, 250);
+            Scene confirmScene = new Scene(vBox, 1280, 1024);
             primaryStage.setScene(confirmScene);
             primaryStage.show();
         }
@@ -165,7 +165,7 @@ public class Graphique extends Application {
 
 
         
-            public void test() {
+            public void Gamemode() {
                 launch();
             }
 
