@@ -1,10 +1,7 @@
 package com.ynov;
 
 
-
-
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,7 +11,6 @@ import javafx.scene.layout.HBox;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.scene.layout.VBox;
 
 public class Graphique extends Application {
@@ -87,7 +83,7 @@ public class Graphique extends Application {
         private void action(Stage primaryStage) { //Possede les bouttons pour effectuer les action et l'affichage des informations du tamagotchi 
             t.Timer();
              Label Bonheur = new Label("Bonheur : " + t.Bonheur);
-            Label Faim = new Label((t.Faim == true ? "J'ai faim" : "Je n'ai pas faim"));
+            Label Faim = new Label((t.Faim == true ? "Je n'ai pas faim" : "J'ai faim"));
             Label Sante = new Label((t.Malade == true ? "Je suis Malade" : "Je suis en pleine forme"));
             Label Proprete = new Label((t.Propreté == true ? "Je suis propre" : "Je suis sale"));
             Label Nom = new Label("Nom : " + t.Nom);
